@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – LKH ASN Kabupaten Mimika</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-50 text-slate-800">
+    <!-- HEADER -->
+    <header
+      class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <img
+            src="img/logo-kab-mimika.png"
+            alt="Logo Kabupaten Mimika"
+            class="w-12 h-12 object-contain"
+          />
+          <div>
+            <h1 class="text-base sm:text-lg font-semibold leading-tight">
+              Admin LKH ASN Kabupaten Mimika
+            </h1>
+            <p class="text-xs text-slate-500 -mt-0.5">
+              Panel Pengelolaan Data & Validasi
+            </p>
+          </div>
+        </div>
+        <div class="hidden sm:flex items-center gap-3">
+          <button
+            id="btnLogout"
+            class="px-3 py-1.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-[250px_minmax(0,1fr)] gap-6"
+    >
+      <!-- SIDEBAR -->
+      <aside class="lg:sticky lg:top-20">
+        <nav class="bg-white border border-slate-200 rounded-2xl p-3">
+          <ul class="space-y-1" id="menu">
+            <li>
+              <a href="#/dashboard" class="navlink active"
+                ><span>📊</span> Dashboard</a
+              >
+            </li>
+            <li>
+              <a href="#/akun" class="navlink"><span>👥</span> Akun Pengguna</a>
+            </li>
+            <li>
+              <a href="#/validasi" class="navlink"
+                ><span>✅</span> Validasi LKH</a
+              >
+            </li>
+            <li>
+              <a href="#/rekap" class="navlink"
+                ><span>📑</span> Rekap & Skoring</a
+              >
+            </li>
+            <li>
+              <a href="#/riwayat" class="navlink"
+                ><span>🕓</span> Riwayat Aktivitas</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- MAIN -->
+      <main class="space-y-6">
+        <!-- DASHBOARD -->
+        <section id="page-dashboard" class="page">
+          <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="kpi-card">
+              <div class="kpi-title">Total Pengguna</div>
+              <div id="kpiUsers" class="kpi-value">0</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-title">Total LKH Masuk</div>
+              <div id="kpiLkh" class="kpi-value">0</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-title">Disetujui</div>
+              <div id="kpiApproved" class="kpi-value">0</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-title">Ditolak</div>
+              <div id="kpiRejected" class="kpi-value">0</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AKUN -->
+        <section id="page-akun" class="page hidden">
+          <div
+            class="bg-white rounded-2xl border border-slate-200 p-4 space-y-4"
+          >
+            <h3 class="text-sm font-semibold">Tambah Akun Pengguna</h3>
+            <form id="formAkun" class="grid sm:grid-cols-2 gap-3">
+              <input
+                id="nama"
+                class="input"
+                placeholder="Nama Lengkap"
+                required
+              />
+              <input id="nip" class="input" placeholder="NIP" required />
+              <input
+                id="unit"
+                class="input sm:col-span-2"
+                placeholder="Unit Kerja"
+                required
+              />
+              <input
+                id="wa"
+                class="input sm:col-span-2"
+                placeholder="Nomor WhatsApp (contoh: 6281234567890)"
+                required
+              />
+              <input
+                id="username"
+                class="input"
+                placeholder="Username (login pengguna)"
+                required
+              />
+              <input
+                id="password"
+                type="password"
+                class="input"
+                placeholder="Password (login pengguna)"
+                required
+              />
+              <select id="role" class="input">
+                <option>ASN</option>
+                <option>Atasan</option>
+              </select>
+              <button class="btn primary sm:col-span-2">
+                Tambah Akun & Kirim via WhatsApp
+              </button>
+            </form>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-200 p-4">
+            <h3 class="text-sm font-semibold mb-2">Daftar Akun Pengguna</h3>
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-slate-500 border-b">
+                  <th>Nama</th>
+                  <th>NIP</th>
+                  <th>Username</th>
+                  <th>Unit</th>
+                  <th>WhatsApp</th>
+                  <th>Role</th>
+                </tr>
+              </thead>
+              <tbody id="akunBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- VALIDASI -->
+        <section id="page-validasi" class="page hidden">
+          <div class="bg-white rounded-2xl border border-slate-200 p-4">
+            <h3 class="text-sm font-semibold mb-3">Validasi LKH Masuk</h3>
+            <div
+              id="validasiBody"
+              class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"
+            ></div>
+          </div>
+        </section>
+
+        <!-- REKAP -->
+        <section id="page-rekap" class="page hidden">
+          <div class="bg-white rounded-2xl border border-slate-200 p-4">
+            <h3 class="text-sm font-semibold mb-3">Rekap Data & Skoring</h3>
+            <div class="flex items-end gap-3 mb-3">
+              <div>
+                <label class="text-xs text-slate-500 block">Tahun</label>
+                <select
+                  id="rekapYear"
+                  class="input !h-9 !py-1.5 !text-sm min-w-[120px]"
+                ></select>
+              </div>
+              <button id="btnExport" class="btn ghost">Unduh CSV</button>
+            </div>
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-slate-500 border-b">
+                  <th>Nama</th>
+                  <th>Total</th>
+                  <th>Diterima</th>
+                  <th>Skor (%)</th>
+                  <th>Kategori</th>
+                </tr>
+              </thead>
+              <tbody id="rekapBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- RIWAYAT -->
+        <section id="page-riwayat" class="page hidden">
+          <div class="bg-white rounded-2xl border border-slate-200 p-4">
+            <h3 class="text-sm font-semibold mb-3">Riwayat Aktivitas</h3>
+            <ul id="logList" class="text-sm text-slate-600 space-y-1"></ul>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer
+      class="border-t border-slate-200 py-6 text-center text-xs text-slate-500"
+    >
+      © 2025 Pemerintah Kabupaten Mimika • Admin Panel Mockup
+    </footer>
+
+    <!-- SCRIPT -->
+    <script>
+      /* === style dasar === */
+      const style = document.createElement("style");
+      style.innerHTML = `
+      .navlink{display:flex;align-items:center;gap:.5rem;padding:.6rem .75rem;border-radius:.75rem;font-size:.9rem;}
+      .navlink.active{background:#ecfdf5;color:#065f46;font-weight:600;border:1px solid #a7f3d0;}
+      .kpi-card{background:white;border:1px solid #e2e8f0;border-radius:1rem;padding:1rem;text-align:center;}
+      .kpi-title{font-size:.8rem;color:#64748b;} .kpi-value{font-size:1.8rem;font-weight:700;margin-top:.25rem;}
+      .input{width:100%;padding:.5rem .75rem;border-radius:.75rem;border:1px solid #e2e8f0;}
+      .btn{border-radius:.75rem;padding:.6rem .9rem;font-weight:600;}
+      .btn.primary{background:#059669;color:white;}
+      .btn.ghost{background:white;border:1px solid #e2e8f0;}
+    `;
+      document.head.appendChild(style);
+
+      /* === Proteksi login admin === */
+      if (!localStorage.getItem("admin_logged")) {
+        window.location.href = "login-admin.html";
+      }
+
+      /* === Store Bersama === */
+      const el = (id) => document.getElementById(id);
+      const SHARED_KEY = "lkh_shared_v1";
+      const shared = {
+        get() {
+          return (
+            JSON.parse(localStorage.getItem(SHARED_KEY)) || {
+              akun: [],
+              lkh: [],
+              log: [],
+            }
+          );
+        },
+        set(d) {
+          localStorage.setItem(SHARED_KEY, JSON.stringify(d));
+        },
+      };
+      const log = (msg) => {
+        const d = shared.get();
+        d.log.unshift(`[${new Date().toLocaleString()}] ${msg}`);
+        shared.set(d);
+        renderLog();
+      };
+
+      /* === Navigasi === */
+      function setPage() {
+        const hash = location.hash || "#/dashboard";
+        document
+          .querySelectorAll(".page")
+          .forEach((p) => p.classList.add("hidden"));
+        document
+          .querySelector(`#page-${hash.replace("#/", "")}`)
+          ?.classList.remove("hidden");
+        document
+          .querySelectorAll("#menu a")
+          .forEach((a) =>
+            a.classList.toggle("active", a.getAttribute("href") === hash)
+          );
+        refresh();
+      }
+      window.addEventListener("hashchange", setPage);
+
+      function refresh() {
+        const d = shared.get();
+        el("kpiUsers").textContent = d.akun.length;
+        el("kpiLkh").textContent = d.lkh.length;
+        el("kpiApproved").textContent = d.lkh.filter(
+          (x) => x.status === "DITERIMA"
+        ).length;
+        el("kpiRejected").textContent = d.lkh.filter(
+          (x) => x.status === "DITOLAK"
+        ).length;
+        renderAkun();
+        renderValidasi();
+        buildYear();
+        renderRekap();
+        renderLog();
+      }
+
+      /* === Tambah Akun + WhatsApp === */
+      el("formAkun").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const d = shared.get();
+        const akun = {
+          nama: el("nama").value.trim(),
+          nip: el("nip").value.trim(),
+          unit: el("unit").value.trim(),
+          wa: el("wa").value.trim(),
+          username: el("username").value.trim(),
+          password: el("password").value.trim(),
+          role: el("role").value,
+        };
+        d.akun.push(akun);
+        shared.set(d);
+        log(`Akun dibuat: ${akun.nama}`);
+        const pesan = encodeURIComponent(
+          `Halo ${akun.nama},
+Akun LKH ASN Kabupaten Mimika Anda telah dibuat.
+
+Username: ${akun.username}
+Password: ${akun.password}
+
+Silakan login di laman pengguna.
+Terima kasih.`
+        );
+        window.open(`https://wa.me/${akun.wa}?text=${pesan}`, "_blank");
+        e.target.reset();
+        refresh();
+      });
+
+      function renderAkun() {
+        const d = shared.get();
+        el("akunBody").innerHTML =
+          d.akun
+            .map(
+              (a) => `
+      <tr class="border-b"><td>${a.nama}</td><td>${a.nip}</td><td>${a.username}</td><td>${a.unit}</td><td>${a.wa}</td><td>${a.role}</td></tr>`
+            )
+            .join("") ||
+          "<tr><td colspan=6 class='text-center text-slate-400 py-2'>Belum ada akun</td></tr>";
+      }
+
+      /* === Validasi LKH === */
+      function renderValidasi() {
+        const d = shared.get();
+        if (!d.lkh.length) {
+          el("validasiBody").innerHTML =
+            "<p class='text-slate-500 text-sm'>Belum ada LKH masuk.</p>";
+          return;
+        }
+        el("validasiBody").innerHTML = d.lkh
+          .map(
+            (l) => `
+        <div class="border border-slate-200 rounded-xl p-3 bg-white">
+          <div class="font-semibold">${l.nama} • ${l.unit}</div>
+          <p class="text-xs text-slate-500">${l.tanggal}</p>
+          <p class="mt-2 text-sm">${l.uraian}</p>
+          <div class="mt-3 flex gap-2 justify-end">
+            <button class="btn ghost text-rose-700" onclick="validasi('${l.id}','DITOLAK')">Tolak</button>
+            <button class="btn ghost text-amber-700" onclick="validasi('${l.id}','PENDING')">Pending</button>
+            <button class="btn primary" onclick="validasi('${l.id}','DITERIMA')">Terima</button>
+          </div>
+        </div>`
+          )
+          .join("");
+      }
+      function validasi(id, status) {
+        const d = shared.get();
+        const i = d.lkh.findIndex((x) => x.id === id);
+        if (i > -1) {
+          d.lkh[i].status = status;
+          shared.set(d);
+          log(`Validasi ${status} untuk ${d.lkh[i].nama}`);
+          refresh();
+        }
+      }
+
+      /* === Rekap & Skoring === */
+      function buildYear() {
+        const sel = el("rekapYear");
+        const d = shared.get();
+        const years = [
+          ...new Set(d.lkh.map((x) => x.tanggal?.slice(0, 4))),
+        ].filter(Boolean);
+        const now = new Date().getFullYear().toString();
+        if (!years.includes(now)) years.push(now);
+        sel.innerHTML = years
+          .map((y) => `<option ${y === now ? "selected" : ""}>${y}</option>`)
+          .join("");
+      }
+      function renderRekap() {
+        const Y = el("rekapYear").value;
+        const d = shared.get();
+        const perUser = {};
+        d.lkh.forEach((l) => {
+          if (!l.tanggal.startsWith(Y)) return;
+          if (!perUser[l.nama]) perUser[l.nama] = { total: 0, ok: 0 };
+          perUser[l.nama].total++;
+          if (l.status === "DITERIMA") perUser[l.nama].ok++;
+        });
+        el("rekapBody").innerHTML =
+          Object.entries(perUser)
+            .map(([n, v]) => {
+              const p = (v.ok / v.total) * 100;
+              const k =
+                p < 30
+                  ? "Sangat Buruk"
+                  : p < 50
+                  ? "Buruk"
+                  : p < 80
+                  ? "Baik"
+                  : "Sangat Baik";
+              return `<tr class="border-b"><td>${n}</td><td>${
+                v.total
+              }</td><td>${v.ok}</td><td>${p.toFixed(
+                1
+              )}%</td><td>${k}</td></tr>`;
+            })
+            .join("") ||
+          "<tr><td colspan=5 class='text-center text-slate-400 py-2'>Belum ada data</td></tr>";
+      }
+      el("rekapYear").addEventListener("change", renderRekap);
+
+      /* === Unduh CSV === */
+      el("btnExport").addEventListener("click", () => {
+        const rows = [["Nama", "Total", "Diterima", "Skor", "Kategori"]];
+        el("rekapBody")
+          .querySelectorAll("tr")
+          .forEach((tr) => {
+            const tds = tr.querySelectorAll("td");
+            if (tds.length) rows.push([...tds].map((td) => td.textContent));
+          });
+        const csv = rows.map((r) => r.join(",")).join("\n");
+        const blob = new Blob([csv], { type: "text/csv" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `rekap_lkh_admin_${el("rekapYear").value}.csv`;
+        a.click();
+      });
+
+      /* === Riwayat === */
+      function renderLog() {
+        const d = shared.get();
+        el("logList").innerHTML =
+          d.log.map((l) => `<li>${l}</li>`).join("") ||
+          "<li class='text-slate-400'>Belum ada aktivitas</li>";
+      }
+
+      /* === Boot === */
+      function boot() {
+        const d = shared.get();
+        if (!d.lkh.length) {
+          d.lkh = [
+            {
+              id: "1",
+              nama: "Ani P",
+              unit: "Bapenda",
+              tanggal: "2025-11-01",
+              uraian: "Rapat penerimaan pajak",
+              status: "PENDING",
+            },
+            {
+              id: "2",
+              nama: "Budi S",
+              unit: "Bapenda",
+              tanggal: "2025-11-02",
+              uraian: "Rekap data wajib pajak",
+              status: "DITERIMA",
+            },
+            {
+              id: "3",
+              nama: "Citra L",
+              unit: "Bapenda",
+              tanggal: "2025-11-03",
+              uraian: "Input data PAD harian",
+              status: "DITOLAK",
+            },
+          ];
+          shared.set(d);
+        }
+      }
+
+      el("btnLogout").addEventListener("click", () => {
+        localStorage.removeItem("admin_logged");
+        alert("Logout berhasil");
+        location.href = "login-admin.html";
+      });
+
+      window.addEventListener("load", () => {
+        boot();
+        setPage();
+      });
+    </script>
+  </body>
+</html>

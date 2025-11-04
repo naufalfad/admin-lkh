@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Admin – LKH ASN Kabupaten Mimika</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-slate-100 flex flex-col items-center justify-center min-h-screen relative overflow-hidden"
+  >
+    <!-- Background -->
+    <div class="fixed inset-0 -z-10">
+      <img
+        src="img/ged-bapenda.webp"
+        alt="Gunung Mimika"
+        class="w-full h-full object-cover brightness-75"
+      />
+    </div>
+
+    <!-- Container -->
+    <div
+      class="w-full max-w-md bg-white/40 backdrop-blur-md border border-white/30 rounded-2xl shadow-xl p-8"
+    >
+      <!-- Header -->
+      <div class="flex flex-col items-center mb-6">
+        <img
+          src="img/logo-kab-mimika.png"
+          alt="Logo Kabupaten Mimika"
+          class="w-24 h-24 object-contain mb-2"
+        />
+        <h1 class="text-lg font-semibold text-emerald-800 text-center">
+          Login Admin<br />LKH ASN Kabupaten Mimika
+        </h1>
+      </div>
+
+      <!-- Form -->
+      <form id="loginAdminForm" class="space-y-4">
+        <div>
+          <label class="block text-sm text-slate-700 mb-1">Username</label>
+          <input
+            id="adminUser"
+            type="text"
+            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white/70 backdrop-blur-sm"
+            placeholder="Masukkan username admin"
+            required
+          />
+        </div>
+        <div>
+          <label class="block text-sm text-slate-700 mb-1">Password</label>
+          <input
+            id="adminPass"
+            type="password"
+            class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none bg-white/70 backdrop-blur-sm"
+            placeholder="Masukkan password admin"
+            required
+          />
+        </div>
+        <div class="flex items-center justify-between text-sm text-slate-700">
+          <label class="flex items-center gap-2"
+            ><input type="checkbox" class="accent-emerald-600" /> Ingat
+            saya</label
+          >
+          <a href="#" class="text-emerald-700 hover:underline"
+            >Lupa Password?</a
+          >
+        </div>
+        <button
+          type="submit"
+          class="w-full py-2 bg-emerald-600 text-white font-semibold rounded-xl hover:brightness-95 transition"
+        >
+          Login
+        </button>
+        <p class="text-center text-xs text-slate-700 mt-3">
+          Kembali ke
+          <a href="login.html" class="text-emerald-700 hover:underline"
+            >Login Pengguna</a
+          >
+        </p>
+      </form>
+    </div>
+
+    <script>
+      // Tambahkan admin default jika belum ada
+      const initAdmin = () => {
+        const data = JSON.parse(localStorage.getItem("lkh_admin_login")) || {
+          username: "admin",
+          password: "mimika123",
+        };
+        localStorage.setItem("lkh_admin_login", JSON.stringify(data));
+      };
+
+      document
+        .getElementById("loginAdminForm")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const user = document.getElementById("adminUser").value.trim();
+          const pass = document.getElementById("adminPass").value.trim();
+
+          const data = JSON.parse(localStorage.getItem("lkh_admin_login"));
+          if (user === data.username && pass === data.password) {
+            localStorage.setItem("admin_logged", true);
+            alert("Login berhasil! Selamat datang, Admin.");
+            window.location.href = "admin-lkh.html";
+          } else {
+            alert("Username atau password salah!");
+          }
+        });
+
+      initAdmin();
+    </script>
+  </body>
+</html>
